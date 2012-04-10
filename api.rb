@@ -50,7 +50,18 @@ post pattern do
     # the only valid condition to delete a document is by id, the rest are ommited
     conditions.delete_if{|key, value| key != 'id' }
 
-    results = update_for(model, conditions, params)
+    if params.include?('id')
+      results = update_for(model, conditions, params)
+      if results
+        status 200
+      else
+        status 501
+        results = {'code' => 4, 'message' => 'The document couldn\'t be updated'}
+      end
+    else
+      status 501
+      results = {'code' => 2, 'message' => 'id is required to perform this action'}
+    end
 
     # serialize to JSON and return it
     response['Content-Type'] = 'application/json'
@@ -198,11 +209,13 @@ helpers do
     end
 
     document.save
+
+    attributes_for(document,  nil)
   end
 
   # Updates documents in the database
   def update_for(model, conditions, params)
-    criteria = criteria_for(model_conditions)
+    criteria = criteria_for(model, conditions)
     document = criteria.to_a[0]
 
     params.each do |key, value|
@@ -216,6 +229,8 @@ helpers do
     end
 
     document.save
+
+    attributes_for(document,  nil)
   end
 
   # Fetchs database results

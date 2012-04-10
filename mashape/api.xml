@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://mashape.com"
+    xsi:schemaLocation="http://mashape.com http://mashape.com/schema/mashape-api-3.0.xsd" >
+
+    <method name="getBills" http="GET" >
+        <url>
+            <![CDATA[/bills?id={id}&title={title}&summary={summary}&tags={tags}&matters={matters}&stage={stage}&creation_date={creation_date}&publish_date={publish_date}&page={page}&per_page={per_page}&sort={sort}&order={order}&fields={fields}&jsonp_callback={jsonp_callback}]]>
+        </url>
+        <parameters>
+            <!-- Available object fields -->
+            <parameter optional="true">id</parameter>
+            <parameter optional="true">title</parameter>
+            <parameter optional="true">summary</parameter>
+            <parameter optional="true">tags</parameter>
+            <parameter optional="true">matters</parameter>
+            <parameter optional="true">stage</parameter>
+            <parameter optional="true">creation_date</parameter>
+            <parameter optional="true">publish_date</parameter>
+            <!-- API parameters -->
+            <parameter optional="true">page</parameter>
+            <parameter optional="true">per_page</parameter>
+            <parameter optional="true">sort</parameter>
+            <parameter optional="true">order</parameter>
+            <parameter optional="true">fields</parameter>
+            <parameter optional="true">jsonp_callback</parameter>
+        </parameters>
+        <result object="BillPage" />
+    </method>
+
+    <method name="saveBill" http="PUT" >
+        <url>
+            <![CDATA[/bills]]>
+        </url>
+        <parameters>
+            <parameter optional="false" >username</parameter>
+            <parameter optional="false" >email</parameter>
+        </parameters>
+        <result object="Bill" />
+    </method>
+
+    <object name="BillPage" >
+        <field>count</field>
+        <field object="Page">page</field>
+        <field object="Bill" array="true">bills</field>
+    </object>
+
+    <object name="Page">
+        <field>per_page</field>
+        <field>count</field>
+        <field>page</field>
+    </object>
+
+    <object name="Bill">
+        <field>id</field>
+        <field>title</field>
+        <field>summary</field>
+        <field array="true">tags</field>
+        <field array="true">matters</field>
+        <field>stage</field>
+        <field>creation_date</field>
+        <field>publish_date</field>
+    </object>
+</api>
