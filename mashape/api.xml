@@ -28,15 +28,51 @@
         <result object="BillPage" />
     </method>
 
-    <method name="saveBill" http="PUT" >
+    <method name="createBill" http="POST" >
         <url>
-            <![CDATA[/bills]]>
+            <![CDATA[/bills?id={id}&title={title}&summary={summary}&tags={tags}&matters={matters}&stage={stage}&creation_date={creation_date}&publish_date={publish_date}]]>
         </url>
         <parameters>
-            <parameter optional="false" >username</parameter>
-            <parameter optional="false" >email</parameter>
+            <parameter optional="false">id</parameter>
+            <parameter optional="false">title</parameter>
+            <parameter optional="false">summary</parameter>
+            <parameter optional="true">tags</parameter>
+            <parameter optional="false">matters</parameter>
+            <parameter optional="false">stage</parameter>
+            <parameter optional="false">creation_date</parameter>
+            <parameter optional="true">publish_date</parameter>
         </parameters>
         <result object="Bill" />
+        <error object="ApiError"/>
+    </method>
+
+    <method name="updateBill" http="PUT" >
+        <url>
+            <![CDATA[/bills?id={id}&title={title}&summary={summary}&tags={tags}&matters={matters}&stage={stage}&creation_date={creation_date}&publish_date={publish_date}]]>
+        </url>
+        <parameters>
+            <parameter optional="false">id</parameter>
+            <parameter optional="true">title</parameter>
+            <parameter optional="true">summary</parameter>
+            <parameter optional="true">tags</parameter>
+            <parameter optional="true">matters</parameter>
+            <parameter optional="true">stage</parameter>
+            <parameter optional="true">creation_date</parameter>
+            <parameter optional="true">publish_date</parameter>
+        </parameters>
+        <result object="Bill" />
+        <error object="ApiError"/>
+    </method>
+
+    <method name="deleteBill" http="DELETE" >
+        <url>
+            <![CDATA[/bills?id={id}]]>
+        </url>
+        <parameters>
+            <parameter optional="false">id</parameter>
+        </parameters>
+        <result object="Bill" />
+        <error object="ApiError"/>
     </method>
 
     <object name="BillPage" >
@@ -60,5 +96,10 @@
         <field>stage</field>
         <field>creation_date</field>
         <field>publish_date</field>
+    </object>
+
+    <object name="ApiError">
+        <field>code</field>
+        <field>message</field>
     </object>
 </api>
