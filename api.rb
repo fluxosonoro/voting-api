@@ -69,11 +69,11 @@ put pattern do
       status 201
     else
       status 501
-      results = {'error' => 'The document couldn\'t be created'}
+      results = {'code' => 1, 'message' => 'The document couldn\'t be created'}
     end
   else
     status 501
-    results = {'error' => 'At least id is required to perform this action'}
+    results = {'code' => 2, 'message' => 'id is required to perform this action'}
   end
 
   # serialize to JSON and return it
@@ -93,17 +93,17 @@ delete pattern do
   # the only valid condition to delete a document is by id, the rest are ommited
   conditions.delete_if{|key, value| key != 'id' }
 
-  if conditions.size() == 1
+  if params.include?('id')
     results = delete_for(model, conditions)
     if results
       status 200
     else
       status 501
-      results = {'error' => 'The document couldn\'t be deleted'}
+      results = {'code' => 3, 'message' => 'The document couldn\'t be deleted'}
     end
   else
     status 501
-    results = {'error' => 'id is required to perform this action'}
+    results = {'code' => 2, 'message' => 'id is required to perform this action'}
   end
 
   # serialize to JSON and return it
@@ -163,6 +163,7 @@ helpers do
     [[key, order]]
   end
 
+  # Returns attributes of a document, excluding mongo internal fields
   def attributes_for(document, fields)
     attributes = document.attributes
     ['_id', 'created_at', 'updated_at'].each {|key| attributes.delete(key) unless (fields || []).include?(key.to_s)}
