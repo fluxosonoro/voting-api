@@ -85,6 +85,7 @@
         <field>per_page</field>
         <field>count</field>
         <field>page</field>
+        <field>total</field>
     </object>
 
     <object name="Bill">
