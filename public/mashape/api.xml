@@ -28,7 +28,7 @@
         <result object="BillPage" />
     </method>
 
-    <method name="createBill" http="POST" >
+    <method name="createBill" http="PUT" >
         <url>
             <![CDATA[/bills?id={id}&title={title}&summary={summary}&tags={tags}&matters={matters}&stage={stage}&creation_date={creation_date}&publish_date={publish_date}]]>
         </url>
@@ -46,7 +46,7 @@
         <error object="ApiError"/>
     </method>
 
-    <method name="updateBill" http="PUT" >
+    <method name="updateBill" http="POST" >
         <url>
             <![CDATA[/bills?id={id}&title={title}&summary={summary}&tags={tags}&matters={matters}&stage={stage}&creation_date={creation_date}&publish_date={publish_date}]]>
         </url>
