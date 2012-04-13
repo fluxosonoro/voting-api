@@ -5,4 +5,7 @@ require 'bundler/setup'
 
 require 'api'
 
+# in production, nginx should scoop these up before they make it here anyway
+#use Rack::Static, :urls => ['/mashape'], :root => 'public'
+
 run Sinatra::Application
