@@ -147,7 +147,7 @@ helpers do
     conditions = {}
 
     params.each do |key, value|
-      if !magic_fields.include?(key.to_sym) && model.fields.include?(key)
+      if !magic_fields.include?(key.to_sym) && model.fields.include?(key) && !value.nil?() && value != ""
         conditions[key] = value
       end
     end
@@ -219,7 +219,7 @@ helpers do
     document = criteria.to_a[0]
 
     params.each do |key, value|
-      if !magic_fields.include?(key.to_sym) && model.fields.include?(key) && key != 'id'
+      if !magic_fields.include?(key.to_sym) && model.fields.include?(key) && key != 'id' && !value.nil?() && value != ""
         if model.fields[key].type == Array
           document[key] = value.split('|')
         else
