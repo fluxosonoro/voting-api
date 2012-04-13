@@ -71,7 +71,7 @@
         <parameters>
             <parameter optional="false">id</parameter>
         </parameters>
-        <result object="Bill" />
+        <result>Boolean</result>
         <error object="ApiError"/>
     </method>
 
@@ -101,5 +101,9 @@
     <object name="ApiError">
         <field>code</field>
         <field>message</field>
+    </object>
+
+    <object name="Boolean">
+        <field>value</field>
     </object>
 </api>
