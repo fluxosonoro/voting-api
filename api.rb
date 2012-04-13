@@ -241,6 +241,11 @@ helpers do
     count = criteria.count
     documents = criteria.to_a
 
+    page_total = count/pagination[:per_page]
+    if count%pagination[:per_page] > 0
+      page_total = page_total + 1
+    end
+
     key = model.to_s.underscore.pluralize
 
     {
@@ -249,7 +254,8 @@ helpers do
       :page => {
         :count => documents.size,
         :per_page => pagination[:per_page],
-        :page => pagination[:page]
+        :page => pagination[:page],
+        :total => page_total
       }
     }
   end
@@ -276,7 +282,7 @@ helpers do
 
   # Fetchs the documents using conditions and pagination
   def criteria_for(model, conditions, fields = nil, order = nil, pagination = nil)
-    if !pagination.nil? && !fields.nil? && !order.nil?
+    if !pagination.nil? && !order.nil?
       skip = pagination[:per_page] * (pagination[:page]-1)
       limit = pagination[:per_page]
 
