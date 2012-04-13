@@ -106,6 +106,7 @@ delete pattern do
 
   if params.include?('id')
     results = delete_for(model, conditions)
+    results = {'value' => results}
     if results
       status 200
     else
