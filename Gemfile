@@ -19,10 +19,3 @@ group :development do
 
   gem 'unicorn'
 end
-
-group :test do
-  gem "cucumber-sinatra"
-  gem "cucumber"
-  gem "capybara"
-  gem "rspec"
-end
