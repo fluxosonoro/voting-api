@@ -3,6 +3,9 @@ require 'sinatra'
 require 'mongoid'
 require 'tzinfo'
 
+# Uncomment this to add support for spanish inflections
+#require 'config/initializers/inflections'
+
 # disable logging
 set :logging, false
 
