@@ -18,6 +18,8 @@ class Bill
   field :stage, :type => String            # Current Stage
   field :creation_date, :type => DateTime
   field :publish_date, :type => DateTime
+  field :authors, :type => Array
+  field :origin_chamber, type => String
 
   # Indexes
   index :id, :unique => true
