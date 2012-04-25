@@ -149,7 +149,11 @@ helpers do
 
     params.each do |key, value|
       if !magic_fields.include?(key.to_sym) && model.fields.include?(key) && !value.nil?() && value != ""
-        conditions[key] = /#{value}/
+        if key != 'id'
+          conditions[key] = /#{value}/
+        else
+          conditions[key] = value
+        end
       end
     end
 
