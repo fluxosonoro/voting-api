@@ -1,6 +1,7 @@
 class Bill
   include Mongoid::Document
   include Mongoid::Timestamps
+  
   # Field Validation
   validates_presence_of :id
   validates_uniqueness_of :id
@@ -8,23 +9,43 @@ class Bill
   # Relations
   has_many :stage_historys
   has_many :bill_external_references
+  has_many :tables
 
   # Fields
-  field :id, :type => String               # Bulletin Number without dots
-  field :title, :type => String
-  field :summary, :type => String
-  field :tags, :type => Array
-  field :matters, :type => Array
-  field :stage, :type => String            # Current Stage
+  field :id, :class => String               # Bulletin Number without dots
+  field :title, :class => String
+  field :summary, :class => String
+  field :tags, :class => Array
+  field :matters, :class => Array
+  field :stage, :class => String            # Current Stage
   field :creation_date, :type => DateTime
   field :publish_date, :type => DateTime
-  field :authors, :type => Array
-  field :origin_chamber, type => String
+  field :authors, :class => Array
+  field :origin_chamber, :class => String
+  field :table_history, :class => Array
 
   # Indexes
   index :id, :unique => true
   index :tags
   index :matters
+end
+
+class Table
+  include Mongoid::Document
+  include Mongoid::Timestamps
+
+  #Fields
+  field :id, :class => String
+  field :date, :class => DateTime
+  field :chamber, :class => String
+  field :legislature, :class => String
+  field :session, :class => String
+
+# Indexes
+  index :id, :unique => true
+
+  # Relations
+  belongs_to :bill
 end
 
 class BillExternalReference
@@ -35,10 +56,10 @@ class BillExternalReference
   validates_uniqueness_of :id
 
   # Fields
-  field :id, :type => Integer
-  field :name, :type => String
-  field :url, :type => String
-  field :date, :type => DateTime
+  field :id, :class => Integer
+  field :name, :class => String
+  field :url, :class => String
+  field :date, :class => DateTime
 
   # Indexes
   index :id, :unique => true
@@ -55,10 +76,10 @@ class StageHistory
   validates_uniqueness_of :id
 
   # Fields
-  field :id, :type => Integer
-  field :stage_name, :type => String
-  field :start_date, :type => DateTime
-  field :end_date, :type => DateTime
+  field :id, :class => Integer
+  field :stage_name, :class => String
+  field :start_date, :class => DateTime
+  field :end_date, :class => DateTime
 
   # Indexes
   index :id, :unique => true
