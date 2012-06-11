@@ -394,5 +394,5 @@ end
 
 get '/field' do
   model = params.to_s
-  get_fields(model)  
+  get_fields(model).to_json
 end
