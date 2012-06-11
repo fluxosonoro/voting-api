@@ -369,7 +369,7 @@ def get_model()
       table = ""
       fields = []
     elsif first_word == 'class'
-      table = line_info[1].strip
+      table = line_info[1].strip.underscore.pluralize
     elsif first_word == 'field'
       fields.push(line_info[1].strip.gsub(",",""))
     end
