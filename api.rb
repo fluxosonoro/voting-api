@@ -352,31 +352,37 @@ end
 
 #model.erb -> {"class" => [fields]}
 def get_model()
-  model_directory = "models.rb"
-  fields = []
-  table = ""
-  model = {}
-  file = File.open(model_directory, 'r')
-  for line in file
-    p "'" + line + "'"
-    next if line.blank?
-    line_info = line.split(/,| +/).map(&:strip).reject(&:empty?)
-
-    first_word = line_info[0].strip
-    p first_word
-    if first_word == 'end'
-      model.store(table,fields)
-      table = ""
-      fields = []
-    elsif first_word == 'class'
-      table = line_info[1].strip
-    elsif first_word == 'field'
-      fields.push(line_info[1].strip.gsub(",",""))
-    end
-  end
-  return model
+  real_model = {'Bill' => ['id', 'title', 'summary', 'tags', 'matters', 'stage', 'creation_date', 'publish_date', 'authors', 'origin_chamber'],
+        'Table' => ['id', 'date', 'chamber', 'legislature', 'session'],
+        'BillExternalReference' => ['id', 'name', 'url', 'date'],
+        'StageHistory' => ['id', 'stage_name', 'start_date', 'end_date'],
+        'Hit' => ['created_at', 'method', 'sections', 'user_agent']}
+  return real_model
+#  model_directory = "models.rb"
+#  fields = []
+#  table = ""
+#  model = {}
+#  file = File.open(model_directory, 'r')
+#  for line in file
+#    p "'" + line + "'"
+#    next if line.blank?
+#    line_info = line.split(/,| +/).map(&:strip).reject(&:empty?)
+#
+#    first_word = line_info[0].strip
+#    p first_word
+#    if first_word == 'end'
+#      model.store(table,fields)
+#      table = ""
+#      fields = []
+#    elsif first_word == 'class'
+#      table = line_info[1].strip
+#    elsif first_word == 'field'
+#      fields.push(line_info[1].strip.gsub(",",""))
+#    end
+#  end
+#  return model
 end
 
 get '/models' do
-  'pronto estarán los modelos'
+  get_model
 end
