@@ -393,5 +393,6 @@ get '/models' do
 end
 
 get '/field' do
-  field = params.to_s  
+  model = params.to_s
+  get_fields(model)  
 end
