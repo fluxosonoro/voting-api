@@ -351,7 +351,7 @@ end
 #added by Marcel for the api-client
 
 #model.erb -> {"class" => [fields]}
-def get_model()
+def get_schema()
   model_directory = "models.rb"
   fields = []
   table = ""
@@ -377,7 +377,21 @@ def get_model()
   return model
 end
 
+def get_models()
+  schema = get_schema
+  schema.keys
+end
+
+def get_fields(model)
+  schema = get_schema
+  schema[model]
+end
+
 get '/models' do
   response['Content-Type'] = 'application/json'
-  get_model.to_json
+  get_models.to_json
+end
+
+get '/field' do
+  field = params[0].to_s
 end
