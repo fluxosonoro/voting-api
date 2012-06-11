@@ -378,5 +378,5 @@ def get_model()
 end
 
 get '/models' do
-  get_model.to_s
+  get_model.to_json
 end
