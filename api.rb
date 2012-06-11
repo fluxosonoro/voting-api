@@ -392,7 +392,7 @@ get '/models' do
   get_models.to_json
 end
 
-get '/field' do
+get '/fields' do
   model = params.to_s
   response['Content-Type'] = 'application/json'
   get_fields(model).to_json
