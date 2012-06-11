@@ -376,3 +376,7 @@ def get_model()
   end
   return model
 end
+
+get '/models' do
+  get_model
+end
