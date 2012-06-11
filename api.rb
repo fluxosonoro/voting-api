@@ -347,3 +347,32 @@ def break_out(hash, keys, final_value)
     hash[keys.first] = final_value
   end
 end
+
+#added by Marcel for the api-client
+
+#model.erb -> {"class" => [fields]}
+def get_model()
+  model_directory = "models.rb"
+  fields = []
+  table = ""
+  model = {}
+  file = File.open(model_directory, 'r')
+  for line in file
+    p "'" + line + "'"
+    next if line.blank?
+    line_info = line.split(/,| +/).map(&:strip).reject(&:empty?)
+
+    first_word = line_info[0].strip
+    p first_word
+    if first_word == 'end'
+      model.store(table,fields)
+      table = ""
+      fields = []
+    elsif first_word == 'class'
+      table = line_info[1].strip
+    elsif first_word == 'field'
+      fields.push(line_info[1].strip.gsub(",",""))
+    end
+  end
+  return model
+end
