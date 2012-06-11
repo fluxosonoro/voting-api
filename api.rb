@@ -378,5 +378,5 @@ def get_model()
 end
 
 get '/models' do
-  get_model
+  'pronto estarán los modelos'
 end
