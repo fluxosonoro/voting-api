@@ -378,5 +378,6 @@ def get_model()
 end
 
 get '/models' do
+  response['Content-Type'] = 'application/json'
   get_model.to_json
 end
