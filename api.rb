@@ -352,12 +352,11 @@ end
 
 #model.erb -> {"class" => [fields]}
 def get_model()
-#  real_model = {'Bill' => ['id', 'title', 'summary', 'tags', 'matters', 'stage', 'creation_date', 'publish_date', 'authors', 'origin_chamber'],
-#        'Table' => ['id', 'date', 'chamber', 'legislature', 'session'],
-#        'BillExternalReference' => ['id', 'name', 'url', 'date'],
-#        'StageHistory' => ['id', 'stage_name', 'start_date', 'end_date'],
-#        'Hit' => ['created_at', 'method', 'sections', 'user_agent']}
-  real_model = "testing"
+  real_model = {'Bill' => ['id', 'title', 'summary', 'tags', 'matters', 'stage', 'creation_date', 'publish_date', 'authors', 'origin_chamber'],
+        'Table' => ['id', 'date', 'chamber', 'legislature', 'session'],
+        'BillExternalReference' => ['id', 'name', 'url', 'date'],
+        'StageHistory' => ['id', 'stage_name', 'start_date', 'end_date'],
+        'Hit' => ['created_at', 'method', 'sections', 'user_agent']}
   return real_model
 #  model_directory = "models.rb"
 #  fields = []
@@ -385,5 +384,5 @@ def get_model()
 end
 
 get '/models' do
-  get_model
+  get_model.to_s
 end
