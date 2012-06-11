@@ -360,7 +360,7 @@ def get_model()
   for line in file
     p "'" + line + "'"
     next if line.blank?
-    line_info = line.split(/,| +/).map(&:strip).reject(&:empty?)
+    line_info = line.split(/,| +/).map(&:strip).map(){|x| x.gsub(':','')}.reject(&:empty?)
 
     first_word = line_info[0].strip
     p first_word
