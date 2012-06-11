@@ -393,5 +393,5 @@ get '/models' do
 end
 
 get '/field' do
-  field = params[0].to_s  
+  field = params.to_s  
 end
