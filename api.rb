@@ -387,6 +387,11 @@ def get_fields(model)
   schema[model]
 end
 
+get '/schema' do
+  response['Content-Type'] = 'application/json'
+  get_schema.to_json
+end
+
 get '/models' do
   response['Content-Type'] = 'application/json'
   get_models.to_json
