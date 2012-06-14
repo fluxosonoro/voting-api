@@ -1,3 +1,4 @@
+# coding: utf-8
 class Bill
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -12,17 +13,17 @@ class Bill
   has_many :tables
 
   # Fields
-  field :id, :class => String               # Bulletin Number without dots
-  field :title, :class => String
-  field :summary, :class => String
-  field :tags, :class => Array
-  field :matters, :class => Array
-  field :stage, :class => String            # Current Stage
-  field :creation_date, :type => DateTime
-  field :publish_date, :type => DateTime
-  field :authors, :class => Array
-  field :origin_chamber, :class => String
-  field :table_history, :class => Array
+  field :id, :class => String ,:meta => ['display_name'=>'Boletin', 'type'=>'text']
+  field :title, :class => String ,:meta => ['type'=>'false','display_name'=>'Titulo']
+  field :summary, :class => String ,:meta => ['type'=>'false','display_name'=>'Resumen']
+  field :tags, :class => Array ,:meta => ['type'=>'tag','display_name'=>'Tags']
+  field :matters, :class => Array ,:meta => ['type'=>'tag','display_name'=>'Materias']
+  field :stage, :class => String ,:meta => ['type'=>'text','display_name'=>'Etapa']            # Current Stage
+  field :creation_date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha de Creación']
+  field :publish_date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha Publicación']
+  field :authors, :class => Array ,:meta => ['type'=>'text','display_name'=>'Autores']
+  field :origin_chamber, :class => String ,:meta => ['display_name'=>'Cámara de origen']
+  field :table_history, :class => Array ,:meta => []
 
   # Indexes
   index :id, :unique => true

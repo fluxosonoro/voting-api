@@ -182,7 +182,7 @@ helpers do
   # Returns attributes of a document, excluding mongo internal fields
   def attributes_for(document, fields)
     attributes = document.attributes
-    ['_id', 'created_at', 'updated_at'].each {|key| attributes.delete(key) unless (fields || []).include?(key.to_s)}
+    mongo_internals.each {|key| attributes.delete(key) unless (fields || []).include?(key.to_s)}
     attributes
   end
 
@@ -358,20 +358,28 @@ def get_schema()
   model = {}
   file = File.open(model_directory, 'r')
   for line in file
-    p "'" + line + "'"
     next if line.blank?
     line_info = line.split(/,| +/).map(&:strip).map(){|x| x.gsub(':','')}.reject(&:empty?)
 
     first_word = line_info[0].strip
-    p first_word
     if first_word == 'end'
       model.store(table,fields)
       table = ""
       fields = []
     elsif first_word == 'class'
       table = line_info[1].strip.underscore.pluralize
-    elsif first_word == 'field'
-      fields.push(line_info[1].strip.gsub(",",""))
+      the_class_name = line_info[1]
+      #TODO: there must be a better way to do this and not use eval
+      the_fields = eval(the_class_name+'.fields')
+      the_fields.each do |field, value|
+        if !mongo_internals.include? field
+          the_field = Hash['name'=>field]
+          if !value.options[:meta].nil? and value.options[:meta].count > 0
+            the_field = the_field.merge(value.options[:meta][0])
+          end
+          fields.push(the_field)
+        end
+      end
     end
   end
   return model
