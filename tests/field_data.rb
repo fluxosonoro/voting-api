@@ -29,11 +29,14 @@ class FieldsWithMetadataTest < Test::Unit::TestCase
       Hash['name'=>'creation_date','type'=>'date','display_name'=>'Fecha de Creación'],
       Hash['name'=>'publish_date','type'=>'date','display_name'=>'Fecha Publicación'],
       Hash['name'=>'authors','type'=>'text','display_name'=>'Autores'],
-      Hash['name'=>'origin_chamber','type'=>'text','display_name'=>'Cámara de origen']
+      Hash['name'=>'origin_chamber','type'=>'text','display_name'=>'Cámara de origen'],
+      Hash['name'=>'table_history']
     ]
 
     first_element = all_elements[0]
     actual_result = JSON.parse(last_response.body)
+    assert_equal actual_result.count, all_elements.count
     assert actual_result.include? first_element
+    assert_equal all_elements, actual_result
   end
 end
