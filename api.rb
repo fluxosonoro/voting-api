@@ -347,3 +347,58 @@ def break_out(hash, keys, final_value)
     hash[keys.first] = final_value
   end
 end
+
+#added by Marcel for the api-client
+
+#model.erb -> {"class" => [fields]}
+def get_schema()
+  model_directory = "models.rb"
+  fields = []
+  table = ""
+  model = {}
+  file = File.open(model_directory, 'r')
+  for line in file
+    p "'" + line + "'"
+    next if line.blank?
+    line_info = line.split(/,| +/).map(&:strip).map(){|x| x.gsub(':','')}.reject(&:empty?)
+
+    first_word = line_info[0].strip
+    p first_word
+    if first_word == 'end'
+      model.store(table,fields)
+      table = ""
+      fields = []
+    elsif first_word == 'class'
+      table = line_info[1].strip.underscore.pluralize
+    elsif first_word == 'field'
+      fields.push(line_info[1].strip.gsub(",",""))
+    end
+  end
+  return model
+end
+
+def get_models()
+  schema = get_schema
+  schema.keys
+end
+
+def get_fields(model)
+  schema = get_schema
+  schema[model]
+end
+
+get '/schema' do
+  response['Content-Type'] = 'application/json'
+  get_schema.to_json
+end
+
+get '/models' do
+  response['Content-Type'] = 'application/json'
+  get_models.to_json
+end
+
+get '/fields' do
+  model = params.to_s
+  response['Content-Type'] = 'application/json'
+  get_fields(model).to_json
+end
