@@ -36,7 +36,8 @@ def models
     Bill,
     BillExternalReference,
     StageHistory,
-    Hit
+    Hit,
+    Table
   ]
 end
 
