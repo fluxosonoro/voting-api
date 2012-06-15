@@ -40,6 +40,14 @@ def models
   ]
 end
 
+def mongo_internals 
+ ['_id', 
+  'created_at', 
+  'updated_at',
+  '_type'
+]
+end
+
 # reload changes made in development to key files without having to restart the server
 configure(:development) do |config|
   require 'sinatra/reloader'
