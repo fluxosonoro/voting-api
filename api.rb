@@ -380,10 +380,19 @@ def get_schema()
           fields.push(the_field)
         end
       end
+      fields.sort! { |a,b|
+        begin
+          a['order'] <=> b['order']
+        rescue
+          0
+        end
+      }
     end
   end
   return model
 end
+
+
 
 def get_models()
   schema = get_schema
