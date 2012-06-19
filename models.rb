@@ -13,17 +13,17 @@ class Bill
   has_many :tables
 
   # Fields
-  field :id, :class => String ,:meta => ['display_name'=>'Boletin', 'type'=>'text', 'order'=>0]
-  field :title, :class => String ,:meta => ['type'=>'false','display_name'=>'Titulo', 'order'=>1]
-  field :summary, :class => String ,:meta => ['type'=>'false','display_name'=>'Resumen', 'order'=>2]
-  field :tags, :class => Array ,:meta => ['type'=>'tag','display_name'=>'Tags', 'order'=>3]
-  field :matters, :class => Array ,:meta => ['type'=>'tag','display_name'=>'Materias', 'order'=>4]
-  field :stage, :class => String ,:meta => ['type'=>'text','display_name'=>'Etapa', 'order'=>5]            # Current Stage
-  field :creation_date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha de Creación', 'order'=>6]
-  field :publish_date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha Publicación', 'order'=>7]
-  field :authors, :class => Array ,:meta => ['type'=>'text','display_name'=>'Autores', 'order'=>8]
-  field :origin_chamber, :class => String ,:meta => ['type'=>'text','display_name'=>'Cámara de origen', 'order'=>9]
-  field :table_history, :class => Array ,:meta => ['order'=>10]
+  field :id, :class => String ,:meta => ['display_name'=>'Boletin', 'type'=>'text', 'order'=>0, 'should_be_shown_in_list'=>true]
+  field :title, :class => String ,:meta => ['type'=>'false','display_name'=>'Titulo', 'order'=>1, 'should_be_shown_in_list'=>true]
+  field :summary, :class => String ,:meta => ['type'=>'false','display_name'=>'Resumen', 'order'=>2, 'should_be_shown_in_list'=>false]
+  field :tags, :class => Array ,:meta => ['type'=>'tag','display_name'=>'Tags', 'order'=>3, 'should_be_shown_in_list'=>false]
+  field :matters, :class => Array ,:meta => ['type'=>'tag','display_name'=>'Materias', 'order'=>4, 'should_be_shown_in_list'=>false]
+  field :stage, :class => String ,:meta => ['type'=>'text','display_name'=>'Etapa', 'order'=>5, 'should_be_shown_in_list'=>true]            # Current Stage
+  field :creation_date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha de Creación', 'order'=>6, 'should_be_shown_in_list'=>true]
+  field :publish_date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha Publicación', 'order'=>7, 'should_be_shown_in_list'=>true]
+  field :authors, :class => Array ,:meta => ['type'=>'text','display_name'=>'Autores', 'order'=>8, 'should_be_shown_in_list'=>false]
+  field :origin_chamber, :class => String ,:meta => ['type'=>'text','display_name'=>'Cámara de origen', 'order'=>9, 'should_be_shown_in_list'=>false]
+  field :table_history, :class => Array ,:meta => ['order'=>10, 'should_be_shown_in_list'=>false]
 
   # Indexes
   index :id, :unique => true
