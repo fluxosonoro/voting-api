@@ -13,7 +13,7 @@ class Bill
   has_many :tables
 
   # Fields
-  field :id, :class => String ,:meta => ['display_name'=>'Boletin', 'type'=>'text', 'order'=>0, 'should_be_shown_in_list'=>true]
+  field :id, :class => String ,:meta => ['display_name'=>'Boletin', 'link_to_detail'=>true, 'type'=>'text', 'order'=>0, 'should_be_shown_in_list'=>true]
   field :title, :class => String ,:meta => ['type'=>'false','display_name'=>'Titulo', 'order'=>1, 'should_be_shown_in_list'=>true]
   field :summary, :class => String ,:meta => ['type'=>'false','display_name'=>'Resumen', 'order'=>2, 'should_be_shown_in_list'=>false]
   field :tags, :class => Array ,:meta => ['type'=>'tag','display_name'=>'Tags', 'order'=>3, 'should_be_shown_in_list'=>false]

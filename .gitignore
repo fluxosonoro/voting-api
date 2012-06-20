@@ -4,3 +4,5 @@
 /.bundle
 .project
 .buildpath
+
+billit-api.sublime*
