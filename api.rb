@@ -308,6 +308,7 @@ helpers do
   end
   # Fetchs the documents using conditions and pagination
   def criteria_for(model, conditions, fields = nil, order = nil, pagination = nil)
+    conditions = solr_search_conditions(conditions)
     if !pagination.nil? && !order.nil?
       skip = pagination[:per_page] * (pagination[:page]-1)
       limit = pagination[:per_page]
@@ -440,4 +441,35 @@ get '/fields' do
   model = params.to_s
   response['Content-Type'] = 'application/json'
   get_fields(model).to_json
+end
+
+# Added by Marcel for solr search
+
+# executes a solr search and returns conditions that match only the returning ids
+def solr_search_conditions(conditions)
+  p conditions
+  conditions
+end
+
+#commented to avoid insertions on real database
+#get '/insert' do
+  #model = params.to_s.singularize.camelize.constantize
+  #document = model.new
+#  document = Bill.new
+#  document.title = 'alpha testing'
+#  document.save
+#  document.attributes.to_json
+#end
+
+get '/search' do
+  search = Bill.solr_search do
+    keywords 'testing' do
+      fields(:title)
+    end
+  end
+  results = ''
+  search.each_hit_with_result do |hit, post|
+    results += post.attributes.to_json
+  end
+  results
 end
