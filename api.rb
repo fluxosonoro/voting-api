@@ -382,7 +382,7 @@ end
 
 #model.erb -> {"class" => [fields]}
 def get_schema()
-  model_directory = "models2.rb"
+  model_directory = "models.rb"
   fields = []
   table = ""
   model = {}
@@ -399,6 +399,9 @@ def get_schema()
     elsif first_word == 'class'
       table = line_info[1].strip.underscore.pluralize
       the_class_name = line_info[1]
+      if the_class_name.strip.empty?
+        continue
+      end
       #TODO: there must be a better way to do this and not use eval
       the_fields = eval(the_class_name+'.fields')
       the_fields.each do |field, value|
