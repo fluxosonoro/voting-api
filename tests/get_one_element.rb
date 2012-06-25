@@ -17,6 +17,11 @@ class GetOneElementTest < Test::Unit::TestCase
   	assert last_response.ok?
     actual_bill = JSON.parse(last_response.body)
     expected = {
+      'metadata'=>{
+        'title'=>"Modifica Ley General de Enseñanza, estableciendo la obligatoriedad de impartir una hora semanal de educación vial y, normas del tránsito.",
+
+        },
+      'data'=>{
                 'stage'=> "Primer trámite constitucional",
                 'origin_chamber'=> "C.Diputados",
                 'authors'=> "",
@@ -24,6 +29,10 @@ class GetOneElementTest < Test::Unit::TestCase
                 'id'=> "8029-04",
                 'title'=> "Modifica Ley General de Enseñanza, estableciendo la obligatoriedad de impartir una hora semanal de educación vial y, normas del tránsito."
                 }
+    }
+
+
+    
     assert_equal expected, actual_bill
   end
   def test_get_one_with_a_callback

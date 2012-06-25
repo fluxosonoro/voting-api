@@ -47,6 +47,7 @@ get one_pattern do
   model = params[:captures][0].singularize.camelize.constantize
   conditions = conditions_for(model, params)
   the_one = one_result_for(model, conditions)
+
   response['Content-Type'] =  'application/json'
   json = the_one.to_json
   params[:callback].present? ? "#{params[:callback]}(#{json});" : json
@@ -257,7 +258,14 @@ helpers do
       not_found
     end
     document = criteria.first
-    attributes_for(document, nil)
+    
+    hash = attributes_for(document, nil)
+    metadata = document.get_metadata
+
+    return {
+      :metadata => metadata,
+      :data => hash
+    }
   end
 
 
@@ -374,7 +382,7 @@ end
 
 #model.erb -> {"class" => [fields]}
 def get_schema()
-  model_directory = "models.rb"
+  model_directory = "models2.rb"
   fields = []
   table = ""
   model = {}

@@ -29,15 +29,16 @@ end
 
 
 # after initializing Mongoid, load in models, and make a method so others can see them
-require 'models'
+require 'models2'
 
 def models
   [
     Bill,
-    BillExternalReference,
+    Description,
+    Event,
+    ExternalReference,
     StageHistory,
-    Hit,
-    Table
+    Hit
   ]
 end
 

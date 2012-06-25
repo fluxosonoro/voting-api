@@ -29,6 +29,12 @@ class Bill
   index :id, :unique => true
   index :tags
   index :matters
+
+  def get_metadata
+    return {
+      'title'=>self.title
+    }
+  end
 end
 
 class Table
