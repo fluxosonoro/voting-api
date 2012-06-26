@@ -21,7 +21,7 @@ configure do
 
   # configure Mongoid to point to the specified MongoDB server
   config[:mongoid][:logger] = Logger.new config[:log_file] if config[:log_file]
-  Mongoid.configure {|c| c.from_hash config[:mongoid]}
+  Mongoid.configure {|c| c.from_hash config[:mongoid][ENV['RACK_ENV'].to_sym]}
 
   # A default time zone for when people search by date (with no time), or a time that omits the time zone
   Time.zone = ActiveSupport::TimeZone.find_tzinfo "America/Santiago"
