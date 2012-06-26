@@ -47,6 +47,7 @@ get one_pattern do
   model = params[:captures][0].singularize.camelize.constantize
   conditions = conditions_for(model, params)
   the_one = one_result_for(model, conditions)
+
   response['Content-Type'] =  'application/json'
   json = the_one.to_json
   params[:callback].present? ? "#{params[:callback]}(#{json});" : json
@@ -257,7 +258,14 @@ helpers do
       not_found
     end
     document = criteria.first
-    attributes_for(document, nil)
+    
+    hash = attributes_for(document, nil)
+    metadata = document.get_metadata
+
+    return {
+      :metadata => metadata,
+      :data => hash
+    }
   end
 
 
@@ -374,42 +382,27 @@ end
 
 #model.erb -> {"class" => [fields]}
 def get_schema()
-  model_directory = "models.rb"
-  fields = []
-  table = ""
   model = {}
-  file = File.open(model_directory, 'r')
-  for line in file
-    next if line.blank?
-    line_info = line.split(/,| +/).map(&:strip).map(){|x| x.gsub(':','')}.reject(&:empty?)
-
-    first_word = line_info[0].strip
-    if first_word == 'end'
-      model.store(table,fields)
-      table = ""
-      fields = []
-    elsif first_word == 'class'
-      table = line_info[1].strip.underscore.pluralize
-      the_class_name = line_info[1]
-      #TODO: there must be a better way to do this and not use eval
-      the_fields = eval(the_class_name+'.fields')
-      the_fields.each do |field, value|
-        if !mongo_internals.include? field
-          the_field = Hash['name'=>field]
-          if !value.options[:meta].nil? and value.options[:meta].count > 0
-            the_field = the_field.merge(value.options[:meta][0])
-          end
-          fields.push(the_field)
+  models.each do |the_class|
+    fields = []
+    the_fields = the_class.fields
+    the_fields.each do |field, value|
+      if !mongo_internals.include? field
+        the_field = Hash['name'=>field]
+        if !value.options[:meta].nil? and value.options[:meta].count > 0
+          the_field = the_field.merge(value.options[:meta][0])
         end
+        fields.push(the_field)
       end
-      fields.sort! { |a,b|
+    end
+    fields.sort! { |a,b|
         begin
           a['order'] <=> b['order']
         rescue
           0
         end
       }
-    end
+    model.store(the_class.name.strip.underscore.pluralize,fields)
   end
   return model
 end
