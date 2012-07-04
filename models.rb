@@ -44,7 +44,7 @@ class Table
 
   #Fields
   field :id, :class => String
-  field :date, :class => DateTime
+  field :date, :type => Date
   field :chamber, :class => String
   field :legislature, :class => String
   field :session, :class => String
