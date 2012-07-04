@@ -218,14 +218,32 @@ helpers do
     document = model.new
 
     params.each do |key, value|
-      if !magic_fields.include?(key.to_sym) && model.fields.include?(key)
-        if model.fields[key].type == Array
-          document[key] = value.split('|')
+
+      if !magic_fields.include?(key.to_sym)
+        #This is a very ugly code to embed a document inside another one
+        if model.relations.include? key
+          embeded_document_class = model.relations[key].class_name.constantize
+          if model.relations[key].relation.macro == :embeds_many
+            value.each do |embeded_key, embeded_value|
+              embeded_document =  embeded_document_class.new
+
+              embeded_value.each do |embeded_documents_key, embeded_documents_value|
+                embeded_document[embeded_documents_key] = embeded_documents_value
+              end
+              eval "document." + key + ".push embeded_document"
+            end
+
+          end
+          #TODO: avoid the eval sentence and make it posible for other types
+          #relation to work
+
         else
           document[key] = value
         end
       end
+        
     end
+    
 
     document.save
 
@@ -406,8 +424,6 @@ def get_schema()
   end
   return model
 end
-
-
 
 def get_models()
   schema = get_schema

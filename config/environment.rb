@@ -34,8 +34,8 @@ require 'models'
 def models
   [
     Bill,
-    BillExternalReference,
-    StageHistory,
+    Event,
+    EventDescription,
     Hit,
     Table
   ]
