@@ -489,14 +489,14 @@ def solr_results_for(model, conditions, fields, order, pagination)
 
   search = model.solr_search do
     conditions.each do |key, value|
-      any_of do
-        value.split("|").each do |term|
-#        fulltext term.to_s do
-#          fields(key)
-#        end
-          with(key, term)
+#      any_of do
+#        value.split("|").each do |term|
+        fulltext value.to_s do
+          fields(key)
         end
-      end
+#          with(key, term)
+#        end
+#      end
       paginate :page => pagination[:page], :per_page => pagination[:per_page]
     end
   end
