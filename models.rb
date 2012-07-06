@@ -1,4 +1,6 @@
 # coding: utf-8
+require 'sunspot_mongoid'
+
 class Bill
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -29,9 +31,19 @@ class Bill
   index :id, :unique => true
   index :tags
   index :matters
+
+  include Sunspot::Mongoid
+  searchable do
+    text :id
+    text :title
+    text :summary
+    string :stage
+    text :origin_chamber
+  end
+
 end
 
-class Table
+	class Table
   include Mongoid::Document
   include Mongoid::Timestamps
 

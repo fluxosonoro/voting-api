@@ -19,3 +19,7 @@ group :development do
 
   gem 'unicorn'
 end
+
+#sunspot_mongoid
+gem 'sunspot_mongoid'
+gem 'sunspot_solr'
