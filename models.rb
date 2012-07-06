@@ -1,4 +1,6 @@
 # coding: utf-8
+require 'sunspot_mongoid'
+
 class Bill
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -37,6 +39,15 @@ class Bill
       'title'=>self.title
     }
   end
+  
+  include Sunspot::Mongoid
+  searchable do
+    text :id
+    text :title
+    text :summary
+    string :stage
+    text :origin_chamber
+  end
 end
 
 class Table
@@ -55,9 +66,8 @@ class Table
 
 # Indexes
   index :id, :unique => true
-
-  
 end
+
 class Event
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -72,6 +82,7 @@ class Event
   # Relations
   embedded_in :bill
 end
+
 class EventDescription
   include Mongoid::Document
   include Mongoid::Timestamps

@@ -22,6 +22,9 @@ get pattern do
 
   # fields to filter
   conditions = conditions_for(model, params)
+  
+  # fields to filter for solr search
+  solr_conditions = solr_conditions_for(model, params)
 
   # how to order the results
   order = order_for(model, params)
@@ -33,7 +36,8 @@ get pattern do
   if params[:explain] == 'true'
     results = explain_for(model, conditions, fields, order, pagination)
   else
-    results = results_for(model, conditions, fields, order, pagination)
+#    results = results_for(model, conditions, fields, order, pagination)
+    results = solr_results_for(model, solr_conditions, fields, order, pagination)
   end
 
   # serialize to JSON and return it
@@ -174,6 +178,19 @@ helpers do
     conditions
   end
 
+  # Same things as above method, but params are strings instead of regex
+  def solr_conditions_for(model, params)
+    conditions = {}
+
+    params.each do |key, value|
+      if !magic_fields.include?(key.to_sym) && model.fields.include?(key) && !value.nil?() && value != ""
+        conditions[key] = value
+      end
+    end
+
+    conditions
+  end
+
   # Gets the order from the params
   def order_for(model, params)
     key = nil
@@ -197,6 +214,16 @@ helpers do
   def attributes_for(document, fields)
     attributes = document.attributes
     mongo_internals.each {|key| attributes.delete(key) unless (fields || []).include?(key.to_s)}
+    attributes
+  end
+
+  # Returns queried attributes of a document
+  def solr_attributes_for(document, fields)
+    attributes = document.attributes
+    #deletes mongo internals
+    mongo_internals.each {|key| attributes.delete(key) unless (fields || []).include?(key.to_s)}
+    #deletes unwanted fields, unless fields == nil
+    attributes.each_key {|key| attributes.delete(key) unless (fields || []).include?(key.to_s)} unless fields.nil?
     attributes
   end
 
@@ -235,9 +262,8 @@ helpers do
           if model.relations[key].relation.macro == :references_many
             value.each do |document_id|
               existing_document = embeded_document_class.find(document_id)
-
               eval "document."+key+".push existing_document"
-
+            end
           end
           #TODO: avoid the eval sentence and make it posible for other types
           #relation to work
@@ -295,7 +321,7 @@ helpers do
   # Fetchs database results
   def results_for(model, conditions, fields, order, pagination)
     criteria = criteria_for(model, conditions, fields, order, pagination)
-
+    
     count = criteria.count
     documents = criteria.to_a
 
@@ -339,6 +365,7 @@ helpers do
   end
   # Fetchs the documents using conditions and pagination
   def criteria_for(model, conditions, fields = nil, order = nil, pagination = nil)
+    conditions = solr_search_conditions(conditions)
     if !pagination.nil? && !order.nil?
       skip = pagination[:per_page] * (pagination[:page]-1)
       limit = pagination[:per_page]
@@ -454,4 +481,87 @@ get '/fields' do
   model = params.to_s
   response['Content-Type'] = 'application/json'
   get_fields(model).to_json
+end
+
+# Added by Marcel for solr search
+
+# executes a solr search and returns conditions that match only the returning ids
+#conditions {field:String => value:regexp}
+def solr_search_conditions(conditions)
+  p "<conditions>"
+  p conditions
+  p "</conditions>"
+  conditions.each{ |key, value| p value.class.name}
+  #implement a solr query
+  #return conditions so that they only match those ids (probably ids)
+  conditions
+end
+
+# returns the results for a solr search
+def solr_results_for(model, conditions, fields, order, pagination)
+
+  search = model.solr_search do
+    conditions.each do |key, value|
+#      any_of do
+#        value.split("|").each do |term|
+      fulltext value.to_s do
+         fields(key)
+      end
+#          with(key, term)
+#        end
+      paginate :page => pagination[:page], :per_page => pagination[:per_page]
+    end
+  end
+
+  key = model.to_s.underscore.pluralize
+  hits = search.hits
+  results = search.results
+
+  {
+    key => hits.map {|bill| solr_attributes_for(bill.result, fields)},
+    :count => search.total,
+    :page => {
+      :count => hits.count,
+      :per_page => pagination[:per_page],
+      :page => pagination[:page],
+      :total => hits.total_pages
+    }
+  }
+end
+
+
+#commented to avoid insertions on real database
+get '/insert' do
+  #model = params.to_s.singularize.camelize.constantize
+  #document = model.new
+  document = Bill.new
+  document.title = 'alpha testing'
+  document.save
+  document.attributes.to_json
+end
+
+get '/search' do
+  search_for = params.to_s
+  search = Bill.solr_search do
+    fulltext search_for do
+      fields(:title)
+    end
+#    keywords 'ley' do
+#      fields(:title)
+#    end
+  end
+
+  p "<search>"
+  p search
+  p "</search>"
+  
+  results = ''
+  search.each_hit_with_result do |hit, post|
+    results += post.attributes.to_json
+  end
+  results
+end
+
+get '/reindex' do
+  Sunspot.index!(Bill.all)
 end
