@@ -9,7 +9,8 @@ class Bill
 
   # Relations
   embeds_many :events, :autosave => true
-  has_many :tables, :autosave => true
+  belongs_to :table
+  
 
   # Fields
   field :id, :class => String ,:meta => ['display_name'=>'Boletin', 'link_to_detail'=>true, 'type'=>'text', 'order'=>0, 'should_be_shown_in_list'=>true]
@@ -42,6 +43,9 @@ class Table
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  
+  # Relations
+  has_many :bills, :autosave => true
   #Fields
   field :id, :class => String
   field :date, :type => Date
@@ -52,8 +56,7 @@ class Table
 # Indexes
   index :id, :unique => true
 
-  # Relations
-  belongs_to :bill
+  
 end
 class Event
   include Mongoid::Document

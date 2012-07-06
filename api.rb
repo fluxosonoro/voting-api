@@ -216,9 +216,7 @@ helpers do
   # Inserts documents into the database
   def insert_for(model, params)
     document = model.new
-
     params.each do |key, value|
-
       if !magic_fields.include?(key.to_sym)
         #This is a very ugly code to embed a document inside another one
         if model.relations.include? key
@@ -232,6 +230,13 @@ helpers do
               end
               eval "document." + key + ".push embeded_document"
             end
+
+          end
+          if model.relations[key].relation.macro == :references_many
+            value.each do |document_id|
+              existing_document = embeded_document_class.find(document_id)
+
+              eval "document."+key+".push existing_document"
 
           end
           #TODO: avoid the eval sentence and make it posible for other types
