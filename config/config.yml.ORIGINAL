@@ -1,0 +1,17 @@
+:mongoid:
+ :development:
+   host: localhost
+   database: inteligente_test
+   raise_not_found_error: false
+ :test:
+   host: localhost
+   database: inteligente_test
+   raise_not_found_error: false
+ 
+:mysql:
+ :host: localhost
+ :username:
+ :password:
+ :database: inteligente
+
+:log_file: /dev/null
