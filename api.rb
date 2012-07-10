@@ -513,9 +513,11 @@ def solr_results_for(model, conditions, fields, order, pagination)
   search.hits.map {|bill| p bill.result}
   p "</hits>"
   results = search.results
+  hits_array = search.hits.map {|bill| solr_attributes_for(bill.result, fields) unless bill.result.nil?}
+  hits_array.delete_if {|bill| bill.nil?}
 
   {
-    key => search.hits.map {|bill| solr_attributes_for(bill.result, fields) unless bill.result.nil?},
+    key => hits_array,
 #    key => search.each_hit_with_result {|bill| bill[0].result.attributes},
     :count => search.total,
     :page => {
