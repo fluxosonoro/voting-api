@@ -45,7 +45,7 @@ class Bill
     text :id
     text :title
     text :summary
-    string :stage
+    text :stage
     text :origin_chamber
   end
 end

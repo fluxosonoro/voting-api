@@ -501,24 +501,35 @@ end
 def solr_results_for(model, conditions, fields, order, pagination)
 
   search = model.solr_search do
-    conditions.each do |key, value|
 #      any_of do
-#        value.split("|").each do |term|
-      fulltext value.to_s do
-         fields(key)
+    conditions.each do |key, value|
+      text_fields do
+        any_of do
+          value.split("|").each do |term|
+            with(key, term)
+          end
+        end
       end
+    end
+#        fulltext value.to_s do
+#          fields(key)
+#        end
 #          with(key, term)
 #        end
-      paginate :page => pagination[:page], :per_page => pagination[:per_page]
-    end
+#      end
+    paginate :page => pagination[:page], :per_page => pagination[:per_page]
   end
 
   key = model.to_s.underscore.pluralize
   hits = search.hits
+  p "<hits>"
+  search.hits.map {|bill| p bill.result}
+  p "</hits>"
   results = search.results
 
   {
-    key => hits.map {|bill| solr_attributes_for(bill.result, fields)},
+    key => search.hits.map {|bill| solr_attributes_for(bill.result, fields) unless bill.result.nil?},
+#    key => search.each_hit_with_result {|bill| bill[0].result.attributes},
     :count => search.total,
     :page => {
       :count => hits.count,
