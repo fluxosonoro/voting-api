@@ -183,7 +183,7 @@ helpers do
     conditions = {}
 
     params.each do |key, value|
-      if !magic_fields.include?(key.to_sym) && model.fields.include?(key) && !value.nil?() && value != ""
+      if !magic_fields.include?(key.to_sym) && (model.fields.include?(key) || special_searches.include?(key)) && !value.nil?() && value != ""
         conditions[key] = value
       end
     end
@@ -500,17 +500,29 @@ end
 # returns the results for a solr search
 def solr_results_for(model, conditions, fields, order, pagination)
 
-  search = model.solr_search do
-#      any_of do
-    conditions.each do |key, value|
-      text_fields do
-        any_of do
-          value.split("|").each do |term|
-            with(key, term)
+    p conditions.keys
+    
+    search = model.solr_search do
+      # search over all fields
+      if conditions.key?("q")
+        fulltext conditions["q"]
+        conditions.delete("q")
+        p "all fields"
+      #search over specific fields
+      end
+      conditions.each do |key, value|
+        text_fields do
+          any_of do
+            value.split("|").each do |term|
+              with(key, term)
+            end
           end
         end
       end
-    end
+#all fields
+#    search = model.solr_search do
+
+
 #        fulltext value.to_s do
 #          fields(key)
 #        end
@@ -526,9 +538,11 @@ def solr_results_for(model, conditions, fields, order, pagination)
   search.hits.map {|bill| p bill.result}
   p "</hits>"
   results = search.results
+  hits_array = search.hits.map {|bill| solr_attributes_for(bill.result, fields) unless bill.result.nil?}
+#  hits_array.delete_if {|bill| bill.nil?}
 
   {
-    key => search.hits.map {|bill| solr_attributes_for(bill.result, fields) unless bill.result.nil?},
+    key => hits_array,
 #    key => search.each_hit_with_result {|bill| bill[0].result.attributes},
     :count => search.total,
     :page => {
@@ -554,9 +568,7 @@ end
 get '/search' do
   search_for = params.to_s
   search = Bill.solr_search do
-    fulltext search_for do
-      fields(:title)
-    end
+    fulltext search_for
 #    keywords 'ley' do
 #      fields(:title)
 #    end
@@ -574,5 +586,6 @@ get '/search' do
 end
 
 get '/reindex' do
+  Sunspot.remove_all!(Bill)
   Sunspot.index!(Bill.all)
 end
