@@ -81,3 +81,10 @@ def magic_fields
     :page, :per_page
   ]
 end
+
+def special_searches
+  [
+  # search in all fields
+  "q"
+  ]
+end
