@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'sunspot_mongoid'
+Mongoid.logger = nil
 
 class Bill
   include Mongoid::Document
@@ -41,9 +42,9 @@ class Bill
   end
   
   include Sunspot::Mongoid
-  searchable do
-    text :id
-    text :title
+  searchable :auto_remove => true do
+    text :id, :stored => true
+    text :title, :stored => true
     text :summary
     text :stage
     text :origin_chamber
