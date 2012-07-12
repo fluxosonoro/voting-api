@@ -6,3 +6,9 @@
 .buildpath
 
 billit-api.sublime*
+
+#sunspot
+sunspot-solr.pid
+
+#swapfiles
+*.swp

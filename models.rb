@@ -1,4 +1,7 @@
 # coding: utf-8
+require 'sunspot_mongoid'
+Mongoid.logger = nil
+
 class Bill
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -9,7 +12,8 @@ class Bill
 
   # Relations
   embeds_many :events, :autosave => true
-  has_many :tables, :autosave => true
+  belongs_to :table
+  
 
   # Fields
   field :id, :class => String ,:meta => ['display_name'=>'Boletin', 'link_to_detail'=>true, 'type'=>'text', 'order'=>0, 'should_be_shown_in_list'=>true]
@@ -36,12 +40,24 @@ class Bill
       'title'=>self.title
     }
   end
+  
+  include Sunspot::Mongoid
+  searchable :auto_remove => true do
+    text :id, :stored => true
+    text :title, :stored => true
+    text :summary
+    text :stage
+    text :origin_chamber
+  end
 end
 
 class Table
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  
+  # Relations
+  has_many :bills, :autosave => true
   #Fields
   field :id, :class => String
   field :date, :type => Date
@@ -51,10 +67,8 @@ class Table
 
 # Indexes
   index :id, :unique => true
-
-  # Relations
-  belongs_to :bill
 end
+
 class Event
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -63,12 +77,13 @@ class Event
   has_many :event_descriptions
 
   # Fields
-  field :start_date, :class => DateTime
-  field :end_date, :class => DateTime
+  field :start_date, :type => DateTime
+  field :end_date, :type => DateTime
   field :type, :class => String
   # Relations
   embedded_in :bill
 end
+
 class EventDescription
   include Mongoid::Document
   include Mongoid::Timestamps
