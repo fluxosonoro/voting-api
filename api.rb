@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
+# coding: utf-8
 
-require 'config/environment'
+require './config/environment'
 
 # for example: [Parlamentario, Proyecto] => "parlamentarios|proyectos"
 endpoints = models.map do |model|
@@ -377,7 +378,6 @@ helpers do
   end
   # Fetchs the documents using conditions and pagination
   def criteria_for(model, conditions, fields = nil, order = nil, pagination = nil)
-    conditions = solr_search_conditions(conditions)
     if !pagination.nil? && !order.nil?
       skip = pagination[:per_page] * (pagination[:page]-1)
       limit = pagination[:per_page]
@@ -497,29 +497,14 @@ end
 
 # Added by Marcel for solr search
 
-# executes a solr search and returns conditions that match only the returning ids
-#conditions {field:String => value:regexp}
-def solr_search_conditions(conditions)
-  p "<conditions>"
-  p conditions
-  p "</conditions>"
-  conditions.each{ |key, value| p value.class.name}
-  #implement a solr query
-  #return conditions so that they only match those ids (probably ids)
-  conditions
-end
-
 # returns the results for a solr search
 def solr_results_for(model, conditions, fields, order, pagination)
 
-    p conditions.keys
-    
     search = model.solr_search do
       # search over all fields
       if conditions.key?("q")
         fulltext conditions["q"]
         conditions.delete("q")
-        p "all fields"
       #search over specific fields
       end
       conditions.each do |key, value|
@@ -531,16 +516,6 @@ def solr_results_for(model, conditions, fields, order, pagination)
           end
         end
       end
-#all fields
-#    search = model.solr_search do
-
-
-#        fulltext value.to_s do
-#          fields(key)
-#        end
-#          with(key, term)
-#        end
-#      end
     paginate :page => pagination[:page], :per_page => pagination[:per_page]
   end
 
@@ -571,10 +546,10 @@ end
 get '/insert' do
   #model = params.to_s.singularize.camelize.constantize
   #document = model.new
-  document = Bill.new
-  document.title = 'alpha testing'
-  document.save
-  document.attributes.to_json
+#  document = Bill.new
+#  document.title = 'alpha testing'
+#  document.save
+#  document.attributes.to_json
 end
 
 get '/search' do

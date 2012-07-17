@@ -13,5 +13,5 @@ sunspot-solr.pid
 #swapfiles
 *.swp
 
-#solr data
-/solr_data
+#solr
+solr_data

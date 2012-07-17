@@ -29,7 +29,7 @@ end
 
 
 # after initializing Mongoid, load in models, and make a method so others can see them
-require 'models'
+require './models'
 
 def models
   [
