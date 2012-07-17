@@ -254,7 +254,19 @@ helpers do
               embeded_document =  embeded_document_class.new
 
               embeded_value.each do |embeded_documents_key, embeded_documents_value|
-                embeded_document[embeded_documents_key] = embeded_documents_value
+                begin
+                  embeded_document[embeded_documents_key] = embeded_documents_value
+                rescue Exception => e
+
+
+
+                  #logger.error(e)
+                  #logger.error(embeded_documents_value)
+
+
+
+                end
+                
               end
               eval "document." + key + ".push embeded_document"
             end

@@ -77,8 +77,8 @@ class Event
   has_many :event_descriptions
 
   # Fields
-  field :start_date, :type => DateTime
-  field :end_date, :type => DateTime
+  field :start_date, :type => Date
+  field :end_date, :type => Date
   field :type, :class => String
   # Relations
   embedded_in :bill
