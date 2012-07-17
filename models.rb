@@ -43,9 +43,9 @@ class Bill
   
   include Sunspot::Mongoid
   searchable :auto_remove => true do
-    text :id, :stored => true
-    text :title, :stored => true
-    text :summary
+    text :id#, :stored => true
+    text :title#, :stored => true
+#    text :summary
     text :stage
     text :origin_chamber
   end

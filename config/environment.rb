@@ -3,6 +3,9 @@ require 'sinatra'
 require 'mongoid'
 require 'tzinfo'
 
+# encoding
+require 'iconv'
+
 # Uncomment this to add support for spanish inflections
 #require 'config/initializers/inflections'
 

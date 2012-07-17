@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# coding: utf-8
 
 require 'config/environment'
 
@@ -184,11 +185,19 @@ helpers do
 
     params.each do |key, value|
       if !magic_fields.include?(key.to_sym) && (model.fields.include?(key) || special_searches.include?(key)) && !value.nil?() && value != ""
-        conditions[key] = value
+        p "tránsito"
+        p value
+        p solr_encode(value)
+        p "tr%C3%A1nsito"
+        conditions[key] = solr_encode(value)
       end
     end
 
     conditions
+  end
+
+  def solr_encode(value)
+    Iconv.conv("UTF8", "UTF8", value)
   end
 
   # Gets the order from the params
