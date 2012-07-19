@@ -448,6 +448,7 @@ def get_schema()
   models.each do |the_class|
     fields = []
     the_fields = the_class.fields
+    p the_fields
     the_fields.each do |field, value|
       if !mongo_internals.include? field
         the_field = Hash['name'=>field]
@@ -457,13 +458,13 @@ def get_schema()
         fields.push(the_field)
       end
     end
-    fields.sort! { |a,b|
-        begin
-          a['order'] <=> b['order']
-        rescue
-          0
-        end
-      }
+#    fields.sort! { |a,b|
+#        begin
+#          a['order'] <=> b['order']
+#        rescue
+#          0
+#        end
+#      }
     model.store(the_class.name.strip.underscore.pluralize,fields)
   end
   return model
@@ -490,7 +491,7 @@ get '/models' do
 end
 
 get '/fields' do
-  model = params.to_s
+  model = params.keys[0]
   response['Content-Type'] = 'application/json'
   get_fields(model).to_json
 end
@@ -500,30 +501,30 @@ end
 # returns the results for a solr search
 def solr_results_for(model, conditions, fields, order, pagination)
 
-    search = model.solr_search do
-      # search over all fields
-      if conditions.key?("q")
-        fulltext conditions["q"]
-        conditions.delete("q")
-      #search over specific fields
-      end
-      conditions.each do |key, value|
-        text_fields do
-          any_of do
-            value.split("|").each do |term|
-              with(key, term)
-            end
+  search = model.solr_search do
+    # search over all fields
+    if conditions.key?("q")
+      fulltext conditions["q"]
+      conditions.delete("q")
+    #search over specific fields
+    end
+    conditions.each do |key, value|
+      p key.class.name
+      text_fields do
+        any_of do
+          value.split("|").each do |term|
+            with(key, term)
           end
         end
       end
+    end
+    #write it nicer
+    order_by order[0][0], order[0][1]
     paginate :page => pagination[:page], :per_page => pagination[:per_page]
   end
 
   key = model.to_s.underscore.pluralize
   hits = search.hits
-  p "<hits>"
-  search.hits.map {|bill| p bill.result}
-  p "</hits>"
   results = search.results
   hits_array = search.hits.map {|bill| solr_attributes_for(bill.result, fields) unless bill.result.nil?}
 #  hits_array.delete_if {|bill| bill.nil?}
@@ -541,6 +542,7 @@ def solr_results_for(model, conditions, fields, order, pagination)
   }
 end
 
+# All the methods below are only used for testing
 
 #commented to avoid insertions on real database
 get '/insert' do
