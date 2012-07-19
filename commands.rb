@@ -2,8 +2,8 @@
 ENV['RACK_ENV'] = 'development'
 
 require "rubygems"
-require 'api'
-require 'models'
+require './api'
+require './models'
 
 
 class Executor
@@ -24,11 +24,12 @@ arguments = Array.new
 for i in 1..ARGV.length-1 
     arguments.push "'"+ARGV[i]+"'"
 end
-if ejecutor.methods.include? command
+if ejecutor.methods.include? command.to_sym
     line = "ejecutor."+command+ " "+ arguments.join(", ")
     eval line
 else
     p "tenis puro frio, escribe un comando que funcione"
+    p command.methods
 end
 
 
