@@ -458,13 +458,6 @@ def get_schema()
         fields.push(the_field)
       end
     end
-#    fields.sort! { |a,b|
-#        begin
-#          a['order'] <=> b['order']
-#        rescue
-#          0
-#        end
-#      }
     model.store(the_class.name.strip.underscore.pluralize,fields)
   end
   return model
@@ -519,7 +512,8 @@ def solr_results_for(model, conditions, fields, order, pagination)
       end
     end
     #write it nicer
-    order_by order[0][0], order[0][1]
+    p order
+    order_by order[0][0], order[0][1] unless order[0][0] == :_id
     paginate :page => pagination[:page], :per_page => pagination[:per_page]
   end
 
