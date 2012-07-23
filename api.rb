@@ -572,3 +572,37 @@ get '/reindex' do
   Sunspot.remove_all!(Bill)
   Sunspot.index!(Bill.all)
 end
+
+get '/' do
+  p 'This is an example query
+<br>
+<a href=http://api.ciudadanointeligente.cl/billit/cl/bills?q=deporte&stage=terminada%7Carchivado&per_page=5&page=2&fields=id,title&sort=creation_date&order=asc>http://api.ciudadanointeligente.cl/billit/cl/bills?q=deporte&stage=terminada%7Carchivado&per_page=5&page=2&fields=id,title&sort=creation_date&order=asc</a>
+<br><br>
+    "bills?" is the model in which the query is performed
+<br>
+    "q=deporte" is a query over all the serchable fields
+<br>
+    "stage=terminada|archivado" is a query on the field "stage" for any of the terms "terminada" or "archivado"
+<br>
+    "per_page=5" defines the amount of results per page
+<br>
+    "page=2" is the page number
+<br>
+    "fields=id,title" are the returned fields
+<br>
+    "sort=creation_date" is the field by which the query is ordered
+<br>
+    "order=asc" is the order type ("asc" o "desc")
+<br>
+
+(notice "deportes" also matches "DEPORTISTAS", "Deporte", "deportivos", etc. thanks to solr)
+<br><br>
+These are urls for displaying the data structure
+<br>
+<a href=http://api.ciudadanointeligente.cl/billit/cl/schema>http://api.ciudadanointeligente.cl/billit/cl/schema</a>
+<br>
+<a href=http://api.ciudadanointeligente.cl/billit/cl/models>http://api.ciudadanointeligente.cl/billit/cl/models</a>
+<br>
+<a href=http://api.ciudadanointeligente.cl/billit/cl/fields?bills>http://api.ciudadanointeligente.cl/billit/cl/fields?bills</a>
+'
+end
