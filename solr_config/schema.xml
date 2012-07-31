@@ -64,8 +64,8 @@
         <tokenizer class="solr.StandardTokenizerFactory"/>
         <filter class="solr.StandardFilterFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
-        <!--filter class="solr.ASCIIFoldingFilterFactory"/>
-        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_es.txt" enablePositionIncrements="true" /-->
+        <filter class="solr.ASCIIFoldingFilterFactory"/>
+        <!--filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_es.txt" enablePositionIncrements="true" /-->
         <filter class="solr.SnowballPorterFilterFactory" language="Spanish" />
       </analyzer>
     </fieldType>
