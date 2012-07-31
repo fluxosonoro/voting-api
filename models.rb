@@ -24,7 +24,7 @@ class Bill
   field :stage, :class => String ,:meta => ['type'=>'text','display_name'=>'Etapa', 'should_be_shown_in_list'=>true]            # Current Stage
   field :creation_date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha de Creación', 'should_be_shown_in_list'=>true]
   field :publish_date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha Publicación', 'should_be_shown_in_list'=>true]
-  field :authors, :class => Array ,:meta => ['type'=>'text','display_name'=>'Autores', 'should_be_shown_in_list'=>false]
+  field :authors, :class => Array ,:meta => ['type'=>'array','display_name'=>'Autores', 'should_be_shown_in_list'=>false]
   field :origin_chamber, :class => String ,:meta => ['type'=>'text','display_name'=>'Cámara de origen', 'should_be_shown_in_list'=>false]
   field :current_urgency, :class => String ,:meta => ['type'=>'text','display_name'=>'Urgencia', 'should_be_shown_in_list'=>false]
   field :table_history, :class => Array ,:meta => ['should_be_shown_in_list'=>false]
