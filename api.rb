@@ -272,12 +272,15 @@ helpers do
             end
 
           end
+	  '''
+	  # used when using referenced documents
           if model.relations[key].relation.macro == :references_many
             value.each do |document_id|
               existing_document = embeded_document_class.find(document_id)
               eval "document."+key+".push existing_document"
             end
           end
+          '''
           #TODO: avoid the eval sentence and make it posible for other types
           #relation to work
 

@@ -68,6 +68,7 @@ class Table
   field :chamber, :class => String
   field :legislature, :class => String
   field :session, :class => String
+  field :bill_list, :class => String
 
 # Indexes
   index :id, :unique => true
