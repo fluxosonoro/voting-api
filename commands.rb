@@ -5,15 +5,24 @@ require "rubygems"
 require './api'
 require './models'
 
+'''
+Reindex usage:
+bundle exec ruby commands.rb reindex Model_Name
+wnere Model_Name is the model you want to reindex (uppercase singular), like Bill or Table
+'''
 
 class Executor
     def app
         Sinatra::Application
     end
     def reindex(*args)
-        Sunspot.remove_all!(Bill)
-        Sunspot.index!(Bill.all)
-
+        #Sunspot.remove_all!(Bill)
+        #Sunspot.index!(Bill.all)
+        #Sunspot.remove_all!(Table)
+        #Sunspot.index!(Table.all)
+	model = args[0].to_s.camelize.singularize.constantize
+	Sunspot.remove_all(model)
+	Sunspot.index!(model.all)
     end
 end
 ARGV.delete_if {|element| element.strip.empty? }
