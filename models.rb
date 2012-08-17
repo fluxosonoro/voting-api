@@ -63,15 +63,31 @@ class Table
   # Relations
   has_many :bills, :autosave => true
   #Fields
-  field :id, :class => String
-  field :date, :type => Date
-  field :chamber, :class => String
-  field :legislature, :class => String
-  field :session, :class => String
-  field :bill_list, :class => String
+  field :id, :class => String ,:meta => ['display_name'=>'Tabla', 'link_to_detail'=>true, 'type'=>'text', 'should_be_shown_in_list'=>true]
+  field :date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha', 'should_be_shown_in_list'=>true]
+  field :chamber, :class => String ,:meta => ['type'=>'text','display_name'=>'Cámara', 'should_be_shown_in_list'=>true]
+  field :legislature, :class => String ,:meta => ['display_name'=>'Legislatura', 'type'=>'text', 'should_be_shown_in_list'=>false]
+  field :session, :class => String ,:meta => ['display_name'=>'Sesión', 'type'=>'text', 'should_be_shown_in_list'=>false]
+  field :bill_list, :class => String ,:meta => ['display_name'=>'Boletines','type'=>'array', 'should_be_shown_in_list'=>false]
 
 # Indexes
   index :id, :unique => true
+
+  def get_metadata
+    return {
+      'id'=>self.id
+    }
+  end
+
+  include Sunspot::Mongoid
+  searchable do
+    string :id
+    time :date
+    text :chamber
+    text :legislature
+    text :session
+    text :bill_list
+  end
 end
 
 class Event
