@@ -7,8 +7,8 @@ class Bill
   include Mongoid::Timestamps
   
   # Field Validation
-  validates_presence_of :id
-  validates_uniqueness_of :id
+  validates_presence_of :uid
+  validates_uniqueness_of :uid
 
   # Relations
   embeds_many :events, :autosave => true
@@ -16,22 +16,22 @@ class Bill
 #  belongs_to :table  
 
   # Fields
-  field :id, :class => String ,:meta => ['display_name'=>'Boletin', 'link_to_detail'=>true, 'type'=>'text', 'should_be_shown_in_list'=>true]
-  field :title, :class => String ,:meta => ['type'=>'false','display_name'=>'Titulo', 'should_be_shown_in_list'=>true]
-  field :summary, :class => String ,:meta => ['type'=>'false','display_name'=>'Resumen', 'should_be_shown_in_list'=>false]
-  field :tags, :class => Array ,:meta => ['type'=>'tag','display_name'=>'Tags', 'should_be_shown_in_list'=>false]
-  field :matters, :class => Array ,:meta => ['type'=>'tag','display_name'=>'Materias', 'should_be_shown_in_list'=>false]
-  field :stage, :class => String ,:meta => ['type'=>'text','display_name'=>'Etapa', 'should_be_shown_in_list'=>true]            # Current Stage
+  field :uid, :type => String ,:meta => ['display_name'=>'Boletin', 'link_to_detail'=>true, 'type'=>'text', 'should_be_shown_in_list'=>true]
+  field :title, :type => String ,:meta => ['type'=>'false','display_name'=>'Titulo', 'should_be_shown_in_list'=>true]
+  field :summary, :type => String ,:meta => ['type'=>'false','display_name'=>'Resumen', 'should_be_shown_in_list'=>false]
+  field :tags, :type => Array ,:meta => ['type'=>'tag','display_name'=>'Tags', 'should_be_shown_in_list'=>false]
+  field :matters, :type => Array ,:meta => ['type'=>'tag','display_name'=>'Materias', 'should_be_shown_in_list'=>false]
+  field :stage, :type => String ,:meta => ['type'=>'text','display_name'=>'Etapa', 'should_be_shown_in_list'=>true]            # Current Stage
   field :creation_date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha de Creación', 'should_be_shown_in_list'=>true]
   field :publish_date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha Publicación', 'should_be_shown_in_list'=>true]
-  field :authors, :class => Array ,:meta => ['type'=>'array','display_name'=>'Autores', 'should_be_shown_in_list'=>false]
-  field :origin_chamber, :class => String ,:meta => ['type'=>'text','display_name'=>'Cámara de origen', 'should_be_shown_in_list'=>false]
-  field :current_urgency, :class => String ,:meta => ['type'=>'text','display_name'=>'Urgencia', 'should_be_shown_in_list'=>false]
-  field :table_history, :class => Array ,:meta => ['should_be_shown_in_list'=>false]
-  field :link_law, :class => Array ,:meta => ['type'=>'text','display_name'=>'Link a la ley', 'should_be_shown_in_list'=>false]
+  field :authors, :type => Array ,:meta => ['type'=>'array','display_name'=>'Autores', 'should_be_shown_in_list'=>false]
+  field :origin_chamber, :type => String ,:meta => ['type'=>'text','display_name'=>'Cámara de origen', 'should_be_shown_in_list'=>false]
+  field :current_urgency, :type => String ,:meta => ['type'=>'text','display_name'=>'Urgencia', 'should_be_shown_in_list'=>false]
+  field :table_history, :type => Array ,:meta => ['should_be_shown_in_list'=>false]
+  field :link_law, :type => Array ,:meta => ['type'=>'text','display_name'=>'Link a la ley', 'should_be_shown_in_list'=>false]
 
   # Indexes
-  index :id, :unique => true
+  index :uid, :unique => true
   index :tags
   index :matters
 
@@ -44,7 +44,7 @@ class Bill
   include Sunspot::Mongoid
 #  searchable :auto_remove => true do
   searchable do
-    string :id#, :stored => true
+    string :uid#, :stored => true
     text :title#, :stored => true
     text :summary
     text :stage
@@ -63,25 +63,25 @@ class Table
   # Relations
   has_many :bills, :autosave => true
   #Fields
-  field :id, :class => String ,:meta => ['display_name'=>'Tabla', 'link_to_detail'=>true, 'type'=>'text', 'should_be_shown_in_list'=>true]
+  field :uid, :type => String ,:meta => ['display_name'=>'Tabla', 'link_to_detail'=>true, 'type'=>'text', 'should_be_shown_in_list'=>true]
   field :date, :type => DateTime ,:meta => ['type'=>'date','display_name'=>'Fecha', 'should_be_shown_in_list'=>true]
-  field :chamber, :class => String ,:meta => ['type'=>'text','display_name'=>'Cámara', 'should_be_shown_in_list'=>true]
-  field :legislature, :class => String ,:meta => ['display_name'=>'Legislatura', 'type'=>'text', 'should_be_shown_in_list'=>false]
-  field :session, :class => String ,:meta => ['display_name'=>'Sesión', 'type'=>'text', 'should_be_shown_in_list'=>false]
-  field :bill_list, :class => String ,:meta => ['display_name'=>'Boletines','type'=>'array', 'should_be_shown_in_list'=>false]
+  field :chamber, :type => String ,:meta => ['type'=>'text','display_name'=>'Cámara', 'should_be_shown_in_list'=>true]
+  field :legislature, :type => String ,:meta => ['display_name'=>'Legislatura', 'type'=>'text', 'should_be_shown_in_list'=>false]
+  field :session, :type => String ,:meta => ['display_name'=>'Sesión', 'type'=>'text', 'should_be_shown_in_list'=>false]
+  field :bill_list, :type => Array ,:meta => ['display_name'=>'Boletines','type'=>'array', 'should_be_shown_in_list'=>false]
 
 # Indexes
-  index :id, :unique => true
+  index :uid, :unique => true
 
   def get_metadata
     return {
-      'id'=>self.id
+      'uid'=>self.uid
     }
   end
 
   include Sunspot::Mongoid
   searchable do
-    string :id
+    text :uid
     time :date
     text :chamber
     text :legislature
@@ -100,7 +100,7 @@ class Event
   # Fields
   field :start_date, :type => Date
   field :end_date, :type => Date
-  field :type, :class => String
+  field :type, :type => String
   # Relations
   embedded_in :bill
 end
@@ -109,7 +109,7 @@ class EventDescription
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :key, :class=> String
+  field :key, :type=> String
   field :value
 
 end

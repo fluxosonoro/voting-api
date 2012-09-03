@@ -67,9 +67,9 @@ post pattern do
     conditions = conditions_for(model, params)
 
     # the only valid condition to delete a document is by id, the rest are ommited
-    conditions.delete_if{|key, value| key != 'id' }
+    conditions.delete_if{|key, value| key != 'uid' }
 
-    if params.include?('id')
+    if params.include?('uid')
       results = update_for(model, conditions, params)
       if results
         status 200
@@ -93,7 +93,7 @@ put pattern do
   # for example: "foos" => Foo
   model = params[:captures][0].singularize.camelize.constantize
 
-  if params.include?('id')
+  if params.include?('uid')
     results = insert_for(model, params)
     if results
       status 201
@@ -121,9 +121,9 @@ delete pattern do
   conditions = conditions_for(model, params)
 
   # the only valid condition to delete a document is by id, the rest are ommited
-  conditions.delete_if{|key, value| key != 'id' }
+  conditions.delete_if{|key, value| key != 'uid' }
 
-  if params.include?('id')
+  if params.include?('uid')
     results = delete_for(model, conditions)
     results = {'value' => results}
     if results
@@ -168,7 +168,7 @@ helpers do
 
     params.each do |key, value|
       if !magic_fields.include?(key.to_sym) && model.fields.include?(key) && !value.nil?() && value != ""
-        if key != 'id'
+        if key != 'uid'
           conditions[key] = /#{value}/
         else
           conditions[key] = value
@@ -303,7 +303,8 @@ helpers do
     document = criteria.to_a[0]
 
     params.each do |key, value|
-      if !magic_fields.include?(key.to_sym) && model.fields.include?(key) && key != 'id' && !value.nil?() && value != ""
+      if !magic_fields.include?(key.to_sym) && model.fields.include?(key) && key != 'uid' && !value.nil?() && value != ""
+
         if model.fields[key].type == Array
           document[key] = value.split('|')
         else
